@@ -1,6 +1,6 @@
 {
   "name": "enfsmkdirp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "mkdir -p for node",
   "license": "CC-BY-4.0",
   "author": {
