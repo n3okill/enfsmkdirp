@@ -185,7 +185,7 @@ describe("enfsmkdirp sync", function() {
         file = nodePath.join(invalidWindowsDrive, "fooSync");
         (function() {
             mkdirp.mkdirpSync(file)
-        }).should.throw({code: "ENOENT", message: /no such file or directory, mkdir/});
+        }).should.throw({code: "EINVALID", message: /Invalid character found in path./});
     });
     it("should test invalid filename with double quote sync", function() {
         var file;

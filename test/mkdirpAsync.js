@@ -331,8 +331,8 @@ describe("enfsmkdirp async", function() {
         mkdirp.mkdirp(file, function(err) {
             if (isWindows) {
                 (err === null).should.be.equal(false);
-                err.code.should.be.equal("ENOENT");
-                err.message.should.containEql("no such file or directory, mkdir");
+                err.code.should.be.equal("EINVALID");
+                err.message.should.containEql("Invalid character found in path.");
             } else {
                 (err === null).should.be.equal(true);
             }
