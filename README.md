@@ -8,7 +8,11 @@
 enfsmkdirp
 =========
 Module that add list functionality to node fs module
+
 **enfs** stands for [E]asy [N]ode [fs]
+
+This module is intended to work as a sub-module of [enfs](https://www.npmjs.com/package/enfs)
+
 
 Description
 -----------
@@ -24,7 +28,7 @@ Usage
 `enfsmkdirp`
 
 ```js
-    var enfsmkdirp = require("esnofsmkdirp");
+    var enfsmkdirp = require("enfsmkdirp");
 ```
 
 Errors
