@@ -97,7 +97,7 @@ describe("enfsmkdirp sync", function() {
             // making the same file again should have no effect.
             (function() {
                 made = mkdirp.mkdirpSync(file);
-                (made === null).should.be.equal(true);
+                (made === file).should.be.equal(true);
             }).should.not.throw();
         }).should.not.throw();
     });
