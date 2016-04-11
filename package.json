@@ -1,6 +1,6 @@
 {
   "name": "enfsmkdirp",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "mkdir -p for node fs module",
   "license": "CC-BY-4.0",
   "author": {
