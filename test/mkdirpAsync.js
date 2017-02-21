@@ -5,22 +5,22 @@
 
 "use strict";
 
-var nodePath = require("path"),
-    nodeOs = require("os"),
-    rimraf = require("rimraf"),
-    enFs = require("enfspatch"),
-    mkdirp = require("../"),
-    mkdirpUtil = require("../lib/util"),
-    cwd = process.cwd();
+const nodePath = require("path");
+const nodeOs = require("os");
+const rimraf = require("rimraf");
+const enFs = require("enfspatch");
+const mkdirp = require("../");
+const mkdirpUtil = require("../lib/util");
+const cwd = process.cwd();
 
 
 describe("enfsmkdirp async", function() {
-    var _0777, _0755, _0744, tmpPath, isWindows, invalidWindowsDrive = "AB:\\";
-    tmpPath = nodePath.join(nodeOs.tmpdir(), "enfsmkdirpasync");
-    _0777 = parseInt("0777", 8);
-    _0755 = parseInt("0755", 8);
-    _0744 = parseInt("0744", 8);
-    isWindows = /^win/.test(process.platform);
+    const invalidWindowsDrive = "AB:\\";
+    const tmpPath = nodePath.join(nodeOs.tmpdir(), "enfsmkdirpasync");
+    const _0777 = parseInt("0777", 8);
+    const _0755 = parseInt("0755", 8);
+    const _0744 = parseInt("0744", 8);
+    const isWindows = /^win/.test(process.platform);
     before(function() {
         if (!enFs.existAccessSync(tmpPath)) {
             enFs.mkdirSync(tmpPath);
@@ -36,11 +36,10 @@ describe("enfsmkdirp async", function() {
     });
 
     it("should test mkdirp", function(done) {
-        var file, x, y, z;
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep));
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep));
         mkdirp.mkdirp(file, _0755, function(err) {
             (err === null).should.be.equal(true);
             enFs.stat(file, function(errStat, stat) {
@@ -54,12 +53,11 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test chmod", function(done) {
-        var ps, file;
-        ps = [tmpPath];
-        for (var i = 0; i < 25; i++) {
+        const ps = [tmpPath];
+        for (let i = 0; i < 25; i++) {
             ps.push(Math.floor(Math.random() * Math.pow(16, 4)).toString(16));
         }
-        file = ps.join(nodePath.sep);
+        const file = ps.join(nodePath.sep);
         mkdirp.mkdirp(file, _0744, function(err) {
             (err === null).should.be.equal(true);
             enFs.stat(file, function(errStat, stat) {
@@ -84,14 +82,13 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test overwrite", function(done) {
-        var ps, file, itw;
-        ps = [tmpPath];
-        for (var i = 0; i < 2; i++) {
+        const ps = [tmpPath];
+        for (let i = 0; i < 2; i++) {
             ps.push(Math.floor(Math.random() * Math.pow(16, 4)).toString(16));
         }
-        file = ps.join(nodePath.sep);
+        const file = ps.join(nodePath.sep);
         //a file in the way
-        itw = ps.slice(0, 2).join(nodePath.sep);
+        const itw = ps.slice(0, 2).join(nodePath.sep);
         enFs.writeFile(itw, "I am in the way", function(errWrite) {
             (errWrite === null).should.be.equal(true);
             enFs.stat(itw, function(errStat, stat) {
@@ -108,8 +105,7 @@ describe("enfsmkdirp async", function() {
     });
 
     it("should test permissions", function(done) {
-        var file;
-        file = nodePath.join(tmpPath, (Math.random() * (1 << 30)).toString(16));
+        const file = nodePath.join(tmpPath, (Math.random() * (1 << 30)).toString(16));
 
         mkdirp.mkdirp(file, _0755, function(err) {
             (err === null).should.be.equal(true);
@@ -130,14 +126,14 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test race", function(done) {
-        var testsNumber, ps, file, i;
-        testsNumber = 10;
-        ps = [tmpPath];
+        const testsNumber = 10;
+        let counter = testsNumber;
+        const ps = [tmpPath];
 
-        for (i = 0; i < 25; i++) {
+        for (let i = 0; i < 25; i++) {
             ps.push(Math.floor(Math.random() * Math.pow(16, 4)).toString(16));
         }
-        file = ps.join(nodePath.sep);
+        const file = ps.join(nodePath.sep);
 
         function makeFile(file) {
             mkdirp.mkdirp(file, _0755, function(err) {
@@ -148,25 +144,23 @@ describe("enfsmkdirp async", function() {
                     if (!isWindows) {
                         (stat.mode & _0777).should.be.equal(_0755);
                     }
-                    if (--testsNumber === 0) {
+                    if (--counter === 0) {
                         done();
                     }
                 });
             });
         }
 
-        for (i = 0; i < testsNumber; i++) {
+        for (let i = 0; i < testsNumber; i++) {
             makeFile(file);
         }
     });
     it("should test relative path", function(done) {
-        var file, x, y, z;
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-
-        file = [x, y, z].join(nodePath.sep);
+        const file = [x, y, z].join(nodePath.sep);
 
         mkdirp.mkdirp(file, _0755, function(err) {
             (err === null).should.be.equal(true);
@@ -181,14 +175,11 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test relative path 2", function(done) {
-        var file, x, y, z;
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-
-        file = [x, y, z].join(nodePath.sep);
-        file = nodePath.join("..", "tmp", file);
+        const file = nodePath.join("..","tmp",[x, y, z].join(nodePath.sep));
 
         mkdirp.mkdirp(file, _0755, function(err) {
             (err === null).should.be.equal(true);
@@ -203,15 +194,11 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test relative path 3", function(done) {
-        var file, x, y, z;
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-
-        file = [x, y, z].join(nodePath.sep);
-        file = nodePath.join(".", file);
+        const file = nodePath.join(".", [x, y, z].join(nodePath.sep));
 
         mkdirp.mkdirp(file, _0755, function(err) {
             (err === null).should.be.equal(true);
@@ -226,13 +213,11 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test return value", function(done) {
-        var file, x, y, z;
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-
-        file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep));
+        const file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep));
 
         // should always return the full path created.
         //on second test it won't recreate the folder but will return the path
@@ -247,8 +232,7 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test root", function(done) {
-        var file;
-        file = nodePath.resolve(nodePath.sep);
+        const file = nodePath.resolve(nodePath.sep);
         // '/' on unix, 'c:/' on windows.
 
         mkdirp.mkdirp(file, _0755, function(err) {
@@ -261,13 +245,11 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test implicit mode from umask", function(done) {
-        var file, x, y, z;
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-
-        file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep));
+        const file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep));
 
         mkdirp.mkdirp(file, function(err) {
             (err === null).should.be.equal(true);
@@ -282,13 +264,13 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test null byte filename", function(done) {
-        var file, x, y, z, nullChar = "\0";
+        const nullChar = "\0";
 
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const z = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-        file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep), nullChar);
+        const file = nodePath.join(tmpPath, [x, y, z].join(nodePath.sep), nullChar);
 
         mkdirp.mkdirp(file, function(err) {
             (err === null).should.be.equal(false);
@@ -296,19 +278,16 @@ describe("enfsmkdirp async", function() {
             if (err.code) {
                 err.code.should.be.equal("ENOENT");
             }
-            err.message.should.containEql("string without null bytes.");
+            err.message.should.containEql("string without null bytes");
             done();
         });
     });
     it("should test curly braces async", function(done) {
-        var paths, size, file;
-        file = nodePath.resolve(tmpPath);
-        file = file + "/{production,dev}/{css,img,js}";
-        paths = mkdirpUtil.inspectCurlyBraces(file);
-        paths = paths.map(function(path) {
+        const file = `${nodePath.resolve(tmpPath)}/{production,dev}/{css,img,js}`;
+        const paths = mkdirpUtil.inspectCurlyBraces(file).map(function(path) {
             return nodePath.resolve(path);
         });
-        size = paths.length;
+        let size = paths.length;
         mkdirp.mkdirp(file, function(err) {
             (err === null).should.be.equal(true);
             paths.forEach(function(path) {
@@ -323,8 +302,7 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test invalid path drive on windows", function(done) {
-        var file;
-        file = nodePath.join(invalidWindowsDrive, "fooAsync");
+        const file = nodePath.join(invalidWindowsDrive, "fooAsync");
         if (!isWindows) {
             return done();
         }
@@ -340,8 +318,7 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test invalid filename with double quote async", function(done) {
-        var file;
-        file = nodePath.join(tmpPath, 'foo"bar');
+        const file = nodePath.join(tmpPath, 'foo"bar');
 
         mkdirp.mkdirp(file, function(err) {
             if (isWindows) {
@@ -355,8 +332,7 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test Date.toISOString", function(done) {
-        var file;
-        file = nodePath.join(tmpPath, (new Date()).toISOString(), "test");
+        const file = nodePath.join(tmpPath, (new Date()).toISOString(), "test");
         mkdirp.mkdirp(file, function(err) {
             if (!isWindows) {
                 (err === null).should.be.equal(true);
@@ -374,10 +350,9 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test mkdir with array of paths", function(done) {
-        var size, file;
-        file = [nodePath.join(tmpPath, "abc"), nodePath.join(tmpPath, "xyz")];
+        const file = [nodePath.join(tmpPath, "abc"), nodePath.join(tmpPath, "xyz")];
 
-        size = file.length;
+        let size = file.length;
         mkdirp.mkdirp(file, function(err) {
             (err === null).should.be.equal(true);
             file.forEach(function(path) {
@@ -392,15 +367,15 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test mkdir with array of paths and curly braces", function(done) {
-        var file, x, y, size, paths = [];
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        let paths = [];
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const y = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
 
-        file = [nodePath.join(tmpPath, x) + "/{production,dev}/{css,img,js}", nodePath.join(tmpPath, y) + "/{production,dev}/{css,img,js}"];
+        let file = [`${nodePath.join(tmpPath, x)}/{production,dev}/{css,img,js}`, `${nodePath.join(tmpPath, y)}/{production,dev}/{css,img,js}`];
         file.forEach(function(p) {
             paths = paths.concat(mkdirpUtil.inspectCurlyBraces(p));
         });
-        size = file.length;
+        let size = file.length;
         mkdirp.mkdirp(file, function(err) {
             (err === null).should.be.equal(true);
             paths.forEach(function(path) {
@@ -415,9 +390,8 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test mkdir with a file of the same name", function(done) {
-        var file, x;
-        x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
-        file = nodePath.join(tmpPath, x, "file.json");
+        const x = Math.floor(Math.random() * Math.pow(16, 4)).toString(16);
+        const file = nodePath.join(tmpPath, x, "file.json");
         enFs.mkdir(nodePath.dirname(file), function(errMkdir) {
             (errMkdir === null).should.be.equal(true);
             enFs.writeFile(file, "Data inside file", function(errWrite) {
