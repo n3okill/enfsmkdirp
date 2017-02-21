@@ -318,7 +318,7 @@ describe("enfsmkdirp async", function() {
         });
     });
     it("should test invalid filename with double quote async", function(done) {
-        const file = nodePath.join(tmpPath, 'foo"bar');
+        const file = nodePath.join(tmpPath, `foo"bar`);
 
         mkdirp.mkdirp(file, function(err) {
             if (isWindows) {

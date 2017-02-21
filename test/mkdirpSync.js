@@ -52,7 +52,7 @@ describe("enfsmkdirp sync", function() {
         }).should.not.throw();
     });
     it("should test permissions sync", function(done) {
-        const file = nodePath.join(tmpPath, (Math.random() * (1 << 30)).toString(16) + '.json');
+        const file = nodePath.join(tmpPath, (Math.random() * (1 << 30)).toString(16) + ".json");
         (function() {
             mkdirp.mkdirpSync(file, _0755);
             enFs.stat(file, function(err, stat) {
@@ -177,12 +177,12 @@ describe("enfsmkdirp sync", function() {
         }).should.throw({code: "EINVALID", message: /Invalid character found in path./});
     });
     it("should test invalid filename with double quote sync", function() {
-        const file = tmpPath + nodePath.sep + 'foo"bar';
+        const file = nodePath.join(tmpPath, `foo"bar`);
         if (!isWindows) {
             return;
         }
         (function() {
-            mkdirp.mkdirpSync(file)
+            mkdirp.mkdirpSync(file);
         }).should.throw({message: /Invalid character found/});
     });
 });
